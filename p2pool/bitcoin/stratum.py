@@ -1,4 +1,3 @@
-import random
 import sys
 
 from twisted.internet import protocol, reactor
@@ -6,6 +5,7 @@ from twisted.python import log
 
 from p2pool.bitcoin import data as bitcoin_data, getwork
 from p2pool.util import expiring_dict, jsonrpc, pack
+import secrets
 
 
 class StratumRPCMiningProvider(object):
@@ -40,7 +40,7 @@ class StratumRPCMiningProvider(object):
             log.err()
             self.transport.loseConnection()
             return
-        jobid = str(random.randrange(2**128))
+        jobid = str(secrets.SystemRandom().randrange(2**128))
         self.other.svc_mining.rpc_set_difficulty(bitcoin_data.target_to_difficulty(x['share_target'])).addErrback(lambda err: None)
         self.other.svc_mining.rpc_notify(
             jobid, # jobid

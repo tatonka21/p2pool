@@ -1,17 +1,16 @@
 from __future__ import division
-
-import random
 import unittest
 
 from p2pool.util import math
+import secrets
 
 def generate_alphabet():
-    if random.randrange(2):
+    if secrets.SystemRandom().randrange(2):
         return None
     else:
         a = map(chr, xrange(256))
-        random.shuffle(a)
-        return a[:random.randrange(2, len(a))]
+        secrets.SystemRandom().shuffle(a)
+        return a[:secrets.SystemRandom().randrange(2, len(a))]
 
 class Test(unittest.TestCase):
     def test_add_tuples(self):
@@ -21,10 +20,10 @@ class Test(unittest.TestCase):
         for i in xrange(10):
             alphabet = generate_alphabet()
             for i in xrange(100):
-                n = random.choice([
-                    random.randrange(3),
-                    random.randrange(300),
-                    random.randrange(100000000000000000000000000000),
+                n = secrets.choice([
+                    secrets.SystemRandom().randrange(3),
+                    secrets.SystemRandom().randrange(300),
+                    secrets.SystemRandom().randrange(100000000000000000000000000000),
                 ])
                 s = math.natural_to_string(n, alphabet)
                 n2 = math.string_to_natural(s, alphabet)
