@@ -2,9 +2,9 @@ from __future__ import division
 
 import unittest
 import hashlib
-import random
 
 from p2pool.bitcoin import sha256
+import secrets
 
 class Test(unittest.TestCase):
     def test_all(self):
@@ -15,15 +15,15 @@ class Test(unittest.TestCase):
             #print
             assert sha256.sha256(test).hexdigest() == hashlib.sha256(test).hexdigest()
         def random_str(l):
-            return ''.join(chr(random.randrange(256)) for i in xrange(l))
+            return ''.join(chr(secrets.SystemRandom().randrange(256)) for i in xrange(l))
         for length in xrange(150):
             test = random_str(length)
             a = sha256.sha256(test).hexdigest()
             b = hashlib.sha256(test).hexdigest()
             assert a == b
         for i in xrange(100):
-            test = random_str(int(random.expovariate(1/100)))
-            test2 = random_str(int(random.expovariate(1/100)))
+            test = random_str(int(secrets.SystemRandom().expovariate(1/100)))
+            test2 = random_str(int(secrets.SystemRandom().expovariate(1/100)))
             
             a = sha256.sha256(test)
             a = a.copy()

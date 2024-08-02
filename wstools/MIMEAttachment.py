@@ -7,8 +7,8 @@
 #TODO do not load all the message in memory stream it from the disk
 
 import re
-import random
 import sys
+import secrets
 
 
 #new line
@@ -37,7 +37,7 @@ class MIMEMessage:
         #maybe I can save some memory
         del alltext
         del msgparts
-        self._startCID =  "<" + (_fmt % random.randrange(sys.maxint)) + (_fmt % random.randrange(sys.maxint)) + ">"
+        self._startCID =  "<" + (_fmt % secrets.SystemRandom().randrange(sys.maxint)) + (_fmt % secrets.SystemRandom().randrange(sys.maxint)) + ">"
 
 
     def toString(self):
@@ -94,7 +94,7 @@ def _make_boundary(text=None):
     #some code taken from python stdlib
     # Craft a random boundary.  If text is given, ensure that the chosen
     # boundary doesn't appear in the text.
-    token = random.randrange(sys.maxint)
+    token = secrets.SystemRandom().randrange(sys.maxint)
     boundary = ('=' * 10) + (_fmt % token) + '=='
     if text is None:
         return boundary
