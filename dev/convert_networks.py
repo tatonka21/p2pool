@@ -3,7 +3,7 @@ import sys
 f = open(sys.argv[1])
 
 while True:
-    if f.readline().strip() == 'nets = dict(': break
+    if f.readline(5_000_000).strip() == 'nets = dict(': break
 
 def nesting(l):
     res = 0
@@ -37,7 +37,7 @@ from p2pool.util import pack
     else: assert False, 'invalid type argument'
 
 while True:
-    l = f.readline()
+    l = f.readline(5_000_000)
     if not l.strip(): continue
     if l.strip() == ')': break
     
@@ -45,11 +45,11 @@ while True:
 
     lines = []
     while True:
-        l = f.readline()
+        l = f.readline(5_000_000)
         if not l.strip(): continue
         if l.strip() == '),': break
         while nesting(l) != 0:
-            l += f.readline()
+            l += f.readline(5_000_000)
         lines.append(l.split('=', 1))
     with open(sys.argv[2] + name + '.py', 'wb') as f2:
         write_header(f2, name)
