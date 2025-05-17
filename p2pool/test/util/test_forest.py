@@ -1,7 +1,7 @@
-import random
 import unittest
 
 from p2pool.util import forest, math
+import secrets
 
 class DumbTracker(object):
     def __init__(self, items=[]):
@@ -85,18 +85,18 @@ def test_tracker(self):
     assert self.heads == t.heads, (self.heads, t.heads)
     assert self.tails == t.tails, (self.tails, t.tails)
     
-    if random.random() < 0.9:
+    if secrets.SystemRandom().random() < 0.9:
         return
     
     for start in self.items:
         a, b = self.get_height_and_last(start), t.get_height_and_last(start)
         assert a == b, (a, b)
         
-        other = random.choice(self.items.keys())
+        other = secrets.choice(self.items.keys())
         assert self.is_child_of(start, other) == t.is_child_of(start, other)
         assert self.is_child_of(other, start) == t.is_child_of(other, start)
         
-        length = random.randrange(a[0])
+        length = secrets.SystemRandom().randrange(a[0])
         assert list(self.get_chain(start, length)) == list(t.get_chain(start, length))
 
 def generate_tracker_simple(n):
@@ -107,7 +107,7 @@ def generate_tracker_simple(n):
 def generate_tracker_random(n):
     items = []
     for i in xrange(n):
-        x = random.choice(items + [FakeShare(hash=None), FakeShare(hash=random.randrange(1000000, 2000000))]).hash
+        x = secrets.choice(items + [FakeShare(hash=None), FakeShare(hash=secrets.SystemRandom().randrange(1000000, 2000000))]).hash
         items.append(FakeShare(hash=i, previous_hash=x))
     t = forest.Tracker(math.shuffled(items))
     test_tracker(t)
@@ -127,19 +127,19 @@ class Test(unittest.TestCase):
         t = generate_tracker_simple(200)
         
         for i in xrange(1000):
-            a = random.randrange(200)
-            b = random.randrange(a + 1)
+            a = secrets.SystemRandom().randrange(200)
+            b = secrets.SystemRandom().randrange(a + 1)
             res = t.get_nth_parent_hash(a, b)
             assert res == a - b, (a, b, res)
     
     def test_tracker2(self):
         for ii in xrange(20):
-            t = generate_tracker_random(random.randrange(100))
+            t = generate_tracker_random(secrets.SystemRandom().randrange(100))
             #print "--start--"
             while t.items:
                 while True:
                     try:
-                        t.remove(random.choice(list(t.items)))
+                        t.remove(secrets.choice(list(t.items)))
                     except NotImplementedError:
                         pass # print "aborted", x
                     else:
@@ -149,8 +149,8 @@ class Test(unittest.TestCase):
     def test_tracker3(self):
         for ii in xrange(10):
             items = []
-            for i in xrange(random.randrange(100)):
-                x = random.choice(items + [FakeShare(hash=None), FakeShare(hash=random.randrange(1000000, 2000000))]).hash
+            for i in xrange(secrets.SystemRandom().randrange(100)):
+                x = secrets.choice(items + [FakeShare(hash=None), FakeShare(hash=secrets.SystemRandom().randrange(1000000, 2000000))]).hash
                 items.append(FakeShare(hash=i, previous_hash=x))
             
             t = forest.Tracker()
@@ -159,10 +159,10 @@ class Test(unittest.TestCase):
             for item in math.shuffled(items):
                 t.add(item)
                 test_tracker(t)
-                if random.randrange(3) == 0:
+                if secrets.SystemRandom().randrange(3) == 0:
                     while True:
                         try:
-                            t.remove(random.choice(list(t.items)))
+                            t.remove(secrets.choice(list(t.items)))
                         except NotImplementedError:
                             pass
                         else:
@@ -173,10 +173,10 @@ class Test(unittest.TestCase):
                 if item.hash not in t.items:
                     t.add(item)
                     test_tracker(t)
-                if random.randrange(3) == 0:
+                if secrets.SystemRandom().randrange(3) == 0:
                     while True:
                         try:
-                            t.remove(random.choice(list(t.items)))
+                            t.remove(secrets.choice(list(t.items)))
                         except NotImplementedError:
                             pass
                         else:
@@ -186,7 +186,7 @@ class Test(unittest.TestCase):
             while t.items:
                 while True:
                     try:
-                        t.remove(random.choice(list(t.items)))
+                        t.remove(secrets.choice(list(t.items)))
                     except NotImplementedError:
                         pass
                     else:

@@ -9,9 +9,11 @@ and port mappings are implemented here.
 @contact: U{raphael@slinckx.net<mailto:raphael@slinckx.net>}
 @version: 0.1.0
 """
+import secrets
+
 __revision__ = "$id"
 
-import socket, random, urlparse, logging
+import socket, urlparse, logging
 
 from twisted.internet import reactor, defer
 from twisted.web import client
@@ -126,7 +128,7 @@ class UPnPMapper(portmapper.NATMapper):
         ptype = port.getHost().type
         intport = port.getHost().port
         
-        for extport in [random.randrange(1025, 65536) for val in range(20)]:
+        for extport in [secrets.SystemRandom().randrange(1025, 65536) for val in range(20)]:
             # Check if there is an existing mapping, if it does not exist, bingo
             if not (ptype, extport) in mappings:
                 break
@@ -402,7 +404,7 @@ class UPnPProtocol(DatagramProtocol, object):
                 self.mcast = reactor.listenMulticast(1900+attempt, self)
                 break
             except CannotListenError:
-                attempt = random.randint(0, 500)
+                attempt = secrets.SystemRandom().randint(0, 500)
         
         # joined multicast group, starting upnp search
         self.mcast.joinGroup('239.255.255.250', socket.INADDR_ANY)
